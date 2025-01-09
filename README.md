@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+## **Technical Architecture**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### **1. Customer Flow**
+1. **Scan QR Code:**  
+   - Each table has a unique QR code linking to the menu.  
+   - Customers scan the QR code to access the menu and place an order.  
 
-## Available Scripts
+2. **Place Order:**  
+   - Once the order is placed, it is sent to the backend for processing.  
 
-In the project directory, you can run:
+3. **Real-Time Order Updates:**  
+   - Customers receive live updates about their order status (e.g., Confirmed, Preparing, Ready to Serve).  
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **2. Restaurant Flow**
+1. **Admin Panel:**  
+   - Restaurants use the admin panel to manage menu items, track orders, and assign tables.  
+   - Real-time notifications alert staff about new orders or updates.  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. **Order Management:**  
+   - Orders are displayed in the admin panel, categorized by table and order status.  
+   - Staff can update the status of each order, which is reflected in the customer view.  
 
-### `npm test`
+3. **POS Integration (Optional):**  
+   - Orders can be routed to the restaurant’s existing POS system if required.  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+### **3. Backend Process**
+1. **Order Handling:**  
+   - The backend processes the customer’s order and assigns it to the corresponding table.  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Real-Time Notifications:**  
+   - WebSocket connections ensure that both the admin panel and the customer receive updates instantly.  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Database Management:**  
+   - All order details, menu items, and table data are stored in a secure database.  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+## Start Server:"npm start"
