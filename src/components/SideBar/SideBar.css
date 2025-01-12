@@ -3,7 +3,7 @@
     width: 220px;
     background-color: #333;
     color: white;
-    height: 96vh;
+    height: calc(100vh);
     display: flex;
     flex-direction: column;
     align-content: center;
@@ -27,21 +27,21 @@
   .logo-image {
     width: 90px;
     height: 90px;
-    border-radius: 50%; /* Makes the image circular */
-    object-fit: cover; /* Ensures the image fits within the circle */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    border-radius: 50%; 
+    object-fit: cover; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .sidebar .restaurant-name {
+  .restaurant-name {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the text horizontally */
-    background-color: #a4ac49; /* Light violet background */
-    color: #0a0a0a; /* Text color */
-    padding: 10px;
-    width: 95%; /* Make it almost full-width */
-    border-radius: 10px; /* Rounded edges */
-    margin-inline-end: auto; /* Center horizontally with margin */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+    justify-content: center; 
+    background-color: #e8ca24; 
+    color: #0a0a0a; 
+    padding: 5px;
+    height:auto ;
+    width: 95%;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
     margin-bottom: 1em;
   }
   .restaurant-name-text {
@@ -83,22 +83,24 @@
   }
   
   .sidebar-bottom-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    /* border-radius: 50%; */
     margin-bottom: 10px;
   }
   
   .signout-button {
-    background-color: #dc3545;
-    color: white;
+    background-color:#e8ca24;
+    color: rgb(21, 0, 0);
     border: none;
-    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
   }
 
   .signout-button:hover {
-    background-color: #c82333;
+    background-color: #aabe36;
   }
   
