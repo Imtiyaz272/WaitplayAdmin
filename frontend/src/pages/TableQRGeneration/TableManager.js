@@ -119,7 +119,10 @@ const TableManager = () => {
         </ul>
       </div>
 
-      <div className="flex flex-col w-full md:w-1/4 bg-gray-100 md:min-h-screen md:mt-0 mt-10 h-auto p-4 rounded-lg shadow-md gap-3">
+      <div
+        className="flex flex-col w-1/4 bg-gray-100 md:mt-0 mt-8 h-auto p-4 rounded-lg shadow-md gap-3"
+        style={{ height: "calc(100vh - 100px)" }}
+      >
         <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">
           TABLES
         </h2>
