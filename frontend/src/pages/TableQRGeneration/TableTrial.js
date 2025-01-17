@@ -5,15 +5,8 @@ import axios from "axios";
 import QRCodeModal from "./QRCodeModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { FaQrcode, FaTrash } from "react-icons/fa";
-import Notification from "./Notification";
 
-const TableManager = () => {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success", 
-  });
-
+const TableTrial = () => {
   const [tables, setTables] = useState([]);
   const [showInputs, setShowInputs] = useState(false);
   const [tableNumber, setTableNumber] = useState("");
@@ -43,38 +36,24 @@ const TableManager = () => {
       });
   }, []);
 
-  const handleRequest = () => {
+  const handleAddTable = () => {
     if (!tableNumber || !description) {
       alert("Please fill in both fields.");
       return;
     }
-  
-    const newTable = { tableId: tableNumber, description, restaurantId};
-    axios
-      .post("http://localhost:5000/api/requestQR", newTable)
-      .then((res) => {
-        setSnackbar({
-          open: true,
-          message: "Request sent successfully!",
-          severity: "success",
-        });
-        setShowInputs(false);
-        setTableNumber("");
-        setDescription("");
-      })
-      .catch((err) => {
-        setSnackbar({
-          open: true,
-          message: "Failed to send request.",
-          severity: "error",
-        });
+    
+    const qrData = `https://example.com?restaurantId=${encodeURIComponent(
+      restaurantId
+    )}&tableId=${encodeURIComponent(tableNumber)}`;
+    const newTable = { tableId: tableNumber, description, restaurantId, qrData };
+    axios.post("http://localhost:5000/api/tables", newTable).then((res) => {
+      setTables([...tables, res.data]);
+      setQrData(qrData);
+      setShowModal(true);
+      setShowInputs(false);
       setTableNumber("");
       setDescription("");
     });
-  };
-
-  const closeSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   const handleDeleteTable = (tableId) => {
@@ -141,9 +120,9 @@ const TableManager = () => {
         </ul>
       </div>
 
-      <div className="flex flex-col w-full md:w-1/4 bg-gray-100 md:h-96 md:mt-0 mt-10 h-auto p-4 rounded-lg shadow-md gap-3">
+      <div className="flex flex-col w-full md:w-1/4 bg-gray-100 md:min-h-screen md:mt-0 mt-10 h-auto p-4 rounded-lg shadow-md gap-3">
         <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">
-          Request QR Code
+          TABLES
         </h2>
         <hr className="border-gray-300 mb-6 " />
 
@@ -172,16 +151,19 @@ const TableManager = () => {
                 className="border px-4 py-2 rounded-lg w-full shadow-sm"
               />
               <button
-                onClick={handleRequest}
+                onClick={handleAddTable}
                 className="bg-black text-white px-4 py-2 rounded-lg w-full"
               >
-                Send Request
+                Generate QR Code
               </button>
             </div>
           )}
            <div className="space-y-4 flex flex-col items-center mb-4 mt-2">
-          <button className="bg-gray-200 text-black px-4 py-2 rounded-full w-3/4 border-2 border-black text-sm font-semibold">
+          <button className="bg-gray-200 text-black px-4 py-2 rounded-full w-2/3 border-2 border-black text-sm font-semibold">
             GET TABLE QR CODES
+          </button>
+          <button className="bg-gray-200 text-black px-4 py-2 rounded-full w-2/3 border-black border-2 text-sm font-semibold">
+            btn 2
           </button>
         </div>
         </div>
@@ -197,15 +179,8 @@ const TableManager = () => {
           onCancel={() => setShowDeleteModal(false)}
         />
       )}
-
-              <Notification
-                open={snackbar.open}
-                message={snackbar.message}
-                severity={snackbar.severity}
-                onClose={closeSnackbar}
-              />
     </div>
   );
 };
 
-export default TableManager;
+export default TableTrial;
