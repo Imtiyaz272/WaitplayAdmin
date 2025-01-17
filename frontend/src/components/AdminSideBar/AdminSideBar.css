@@ -1,16 +1,16 @@
 
-.sidebar {
-    width: 230px;
-    background-color: #333;
-    color: white;
-    height: calc(100vh);
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    padding: 15px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+.adminsidebar {
+  width: 240px;
+  background-color: #333;
+  color: white;
+  height: calc(100vh);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
-  .bold-text {
+  .adminbold-text {
     
     font-weight: bold;
     font-size: 24px;
@@ -18,40 +18,19 @@
     margin-bottom: 1em;
     text-align: center;
   }  
-  .logo-container {
+  .adminlogo-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-  
-  .logo-image {
+  .adminlogo-image {
     width: 90px;
     height: 90px;
     border-radius: 50%; 
     object-fit: cover; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
- .restaurant-name {
-  display: flex;
-  align-items: center;
-  justify-content: center; 
-  background-color: #e8ca24; 
-  color: #0a0a0a; 
-  padding: 5px;
-  /* height:; */
-  width: 200px;
-  border-radius: 10px; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  margin-bottom: 1em;
-}
-
-.restaurant-name-text {
-  font-weight: bold; /* Make the text bold */
-  font-size: auto; /* Set the font size to 24px */
-  color: #333; /* Choose a formal dark color for the text */
-  font-family: 'Arial', sans-serif; /* Set the font family */
-  text-transform: capitalize; /* Capitalize the first letter of each word */
-}
 
   
   .sidebar .menu {
@@ -60,7 +39,7 @@
     margin: 0;
   }
   
-  .sidebar .menu li {
+  .menu li {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -72,11 +51,11 @@
   .menu-items{
     margin-left: 5px;
   }
-  .sidebar .menu li:hover {
+  .menu li:hover {
     background-color: #555;
   }
   
-  .sidebar .menu li span {
+  .menu li span {
     margin-left: 10px;
   }
   .sidebar-bottom {
