@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import "./RequestsPage.css";
 const RequestsPage = () => {
   const [requests, setRequests] = useState([]);
@@ -8,7 +9,7 @@ const RequestsPage = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/admin/requests`);
+        const response = await axios.get(`http://localhost:5000/superadmin/requests`);
         console.log(response);
         setRequests(response.data.request);
         setLoading(false);
@@ -21,12 +22,22 @@ const RequestsPage = () => {
     fetchRequests();
   }, []);
   const handleAction = async (id, action) => {
-    try {
-      const response = await axios.post(`http://localhost:5000/admin/requests`);
-      alert(`Request ${action}ed successfully`);
-      setRequests(requests.filter((request) => request._id !== id));
-    } catch (err) {
-      alert(`Failed to ${action} the request: ${err.response?.data?.error || err.message}`);
+    if (action === "accept") {
+      try {
+        await axios.delete(`http://localhost:5000/superadmin/requests/${id}`);
+        toast.success("QR code has been generated and request accepted!");
+        setRequests(requests.filter((request) => request._id !== id));
+      } catch (err) {
+        toast.error(`Failed to accept the request: ${err.response?.data?.error || err.message}`);
+      }
+    } else if (action === "reject") {
+      try {
+        await axios.delete(`http://localhost:5000/superadmin/requests/${id}`);
+        toast.info("Request rejected successfully.");
+        setRequests(requests.filter((request) => request._id !== id));
+      } catch (err) {
+        toast.error(`Failed to reject the request: ${err.response?.data?.error || err.message}`);
+      }
     }
   };
   if (loading) return <div>Loading...</div>;
@@ -72,6 +83,7 @@ const RequestsPage = () => {
           ))}
         </tbody>
       </table>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

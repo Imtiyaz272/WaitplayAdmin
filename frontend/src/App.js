@@ -9,9 +9,9 @@ import Menu from "./restaurantpages/Menu";
 import TableManager from "./restaurantpages/TableQRGeneration/TableManager";
 import RestaurantsPage from "./components/AdminSideBar/RestaurantsPage";
 import RequestsPage from "./Adminpages/RequestsPage";
+import AdminPage from "./Adminpages/AdminPage";
 import "./App.css";
 
-// Create a context to share restaurant data
 const RestaurantContext = createContext();
 
 function useRestaurant() {
@@ -19,15 +19,15 @@ function useRestaurant() {
 }
 
 function RestaurantDetails() {
-  const { id } = useParams(); // Extract `id` from URL
+  const { id } = useParams(); 
   const { setRestaurant } = useRestaurant();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/restaurants/${id}`)
+      .get(`http://localhost:5000/superadmin/restaurants/${id}`)
       .then((response) => {
         console.log(response.data);
-        setRestaurant(response.data.data); // Update restaurant data in context
+        setRestaurant(response.data.data); 
       })
       .catch((error) => {
         console.error("Error fetching restaurant details:", error.message);
@@ -61,6 +61,7 @@ function AppContent() {
           <Route path="/table" element={<TableManager />} />
           <Route path="/admin/restaurants" element={<RestaurantsPage />} />
           <Route path="/admin/requests" element={<RequestsPage />} />
+          <Route path="/admin/admins" element={<AdminPage/>} />
           <Route path="/:id" element={<RestaurantDetails />} />
           <Route path="/:id/sales" element={<Dashboard />} />
         </Routes>

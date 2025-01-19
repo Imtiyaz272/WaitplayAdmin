@@ -10,8 +10,7 @@ const requestsSchema = new mongoose.Schema({
     required: false,
   },
   restaurantId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Restaurant",
+    type:String,
     required: true,
   },
   restaurantName: {

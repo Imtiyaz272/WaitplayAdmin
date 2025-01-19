@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 const tableSchema = new mongoose.Schema({
     tableId:{
-        type: String,
-        required: true,
-        unique: true
+        type: Number,
+        required: true
     },
     description:{
         type:String,
@@ -20,7 +19,7 @@ const tableSchema = new mongoose.Schema({
     },
     isAvailable:{
         type:Boolean,
-        required:true,
+        required:false,
         default: true
     }
   });

@@ -47,7 +47,7 @@ const AdminSideBar = () => {
           <FaUsers />
           <div className="menu-items"> Users </div>
         </li>
-        <li onClick={() => handleNavigation("/admin/Admins")}>
+        <li onClick={() => handleNavigation("/admin/admins")}>
           <FaUserTie />
           <div className="menu-items"> Admins </div>
         </li>

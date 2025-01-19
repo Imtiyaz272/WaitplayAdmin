@@ -9,7 +9,7 @@ function RestaurantPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/restaurants")
+      .get("http://localhost:5000/superadmin/restaurants")
       .then((response) => {
         console.log(response.data.data);
         setRestaurants(response.data.data);
