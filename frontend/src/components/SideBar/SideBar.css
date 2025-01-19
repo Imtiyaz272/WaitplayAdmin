@@ -1,13 +1,13 @@
 
 .sidebar {
-    width: 220px;
+    width: 230px;
     background-color: #333;
     color: white;
     height: calc(100vh);
     display: flex;
     flex-direction: column;
     align-content: center;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
   .bold-text {
@@ -31,24 +31,28 @@
     object-fit: cover; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .restaurant-name {
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-    background-color: #e8ca24; 
-    color: #0a0a0a; 
-    padding: 5px;
-    height:auto ;
-    width: 95%;
-    border-radius: 10px; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-    margin-bottom: 1em;
-  }
-  .restaurant-name-text {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0; /* Remove default margin */
-  }
+ .restaurant-name {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  background-color: #e8ca24; 
+  color: #0a0a0a; 
+  padding: 5px;
+  /* height:; */
+  width: 200px;
+  border-radius: 10px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  margin-bottom: 1em;
+}
+
+.restaurant-name-text {
+  font-weight: bold; /* Make the text bold */
+  font-size: auto; /* Set the font size to 24px */
+  color: #333; /* Choose a formal dark color for the text */
+  font-family: 'Arial', sans-serif; /* Set the font family */
+  text-transform: capitalize; /* Capitalize the first letter of each word */
+}
+
   
   .sidebar .menu {
     list-style: none;

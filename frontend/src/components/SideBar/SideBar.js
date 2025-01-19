@@ -2,10 +2,11 @@ import React from "react";
 import { FaBox, FaHome, FaUtensils,FaQrcode } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; 
 import waitplayLogo from "../../images/waitplay_logo.jpg";
-import devlogo from "../../images/devloper.png"
+import devlogo from "../../images/devloper.png";
+import restaurantlogo from "../../images/restaurantlogo.png";
 import "./SideBar.css";
 
-const SideBar=() => {
+const SideBar=({restaurantname}) => {
   const navigate = useNavigate(); 
 
   const handleNavigation = (path) => {
@@ -26,7 +27,7 @@ const SideBar=() => {
       </div>
       <div className="bold-text">WaitPlay</div>
       <div className="restaurant-name">
-        <h2 className="restaurant-name-text"> Restaurant Name </h2>
+        <h2 className="restaurant-name-text"> {restaurantname} </h2>
       </div>
 
       <ul className="menu">
@@ -49,7 +50,7 @@ const SideBar=() => {
       </ul>
       <div className="sidebar-bottom">
         <img
-          src={devlogo}
+          src={restaurantlogo}
           alt="User Profile"
           className="sidebar-bottom-image"
         />
