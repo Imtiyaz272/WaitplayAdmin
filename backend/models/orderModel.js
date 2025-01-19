@@ -3,11 +3,12 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
   items: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "MenuItem",
+    ref: "OrderItem",
   }],
   table: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Table",
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: "Table",
+    type:String
   },
   totalPrice: { type: Number, required: true },
 });

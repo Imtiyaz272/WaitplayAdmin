@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const menuItemSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   detailedDescription: {
     type: String,
@@ -19,7 +19,7 @@ const menuItemSchema = new mongoose.Schema({
   },
   isVeg: {
     type: Boolean,
-    required: true,
+    required: false,
   },
   halfPrice: {
     type: Number,
@@ -27,19 +27,19 @@ const menuItemSchema = new mongoose.Schema({
   },
   fullPrice: {
     type: Number,
-    required: true,
+    required: false,
   },
   specialItems: [{
     type: String,
-    required: true,
+    required: false,
   }],
   category: {
     type: String,
-    required: true,
+    required: false,
   },
   type: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 

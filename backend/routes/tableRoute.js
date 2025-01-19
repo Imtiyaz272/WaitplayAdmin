@@ -1,5 +1,7 @@
 import express from 'express';
 import {Table} from '../models/tableModel.js';
+import { Request } from '../models/requestModel.js';
+
 const router = express.Router();
 
 router.get("/tables", async (req, res) => {
@@ -41,5 +43,21 @@ router.get("/tables/:tableId/qrcode", async (req, res) => {
       res.status(500).json({ message: "Server error." });
   }
 });
+
+router.post("/requestQR", async (req, res) => {
+    try {
+      const { tableId, description, restaurantId} = req.body;
+      const newRequest = new Request({
+        tableId,
+        description,
+        restaurantId,
+      });
+  
+      await newRequest.save();
+      res.status(201).json({ message: "Request saved successfully", newRequest });
+    } catch (error) {
+      res.status(500).json({ message: "Error saving request", error });
+    }
+  });
 
 export default router;

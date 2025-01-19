@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import tableRoute from './routes/tableRoute.js';
 import adminRoute from './routes/adminRoute.js';
+import orderRoute from './routes/orderRoute.js';
 import {PORT, mongoURL} from './config.js';
 
 const app = express();
@@ -21,6 +22,7 @@ app.get('/', (req, res)=>{
 });
 
 app.use('/api', tableRoute);
+app.use('/orders', orderRoute);
 app.use('/superadmin',adminRoute);
 
 const dropIndex = async () => {
