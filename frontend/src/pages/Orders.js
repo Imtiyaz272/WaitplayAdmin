@@ -103,7 +103,7 @@ const Orders = () => {
               />
               <FaCreditCard
                       style={{ cursor: "pointer"}}
-                      color={true ? "green" : "red"} // Color depends on the payment status
+                      color={true ? "green" : "red"} 
                 />
         </div>
 

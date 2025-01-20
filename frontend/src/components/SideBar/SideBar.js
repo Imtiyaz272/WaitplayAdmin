@@ -1,5 +1,5 @@
 import React from "react";
-import { FaBox, FaHome, FaUtensils,FaQrcode } from "react-icons/fa";
+import { FaBox, FaHome, FaUtensils,FaQrcode, FaReceipt, FaUserFriends } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; 
 import waitplayLogo from "../../images/waitplay_logo.jpg";
 import devlogo from "../../images/devloper.png"
@@ -32,19 +32,27 @@ const SideBar=() => {
       <ul className="menu">
         <li onClick={() => handleNavigation("/dashboard")}>
           <FaHome />
-          <div className="menu-items"> Dashboard </div>
+          <div className="menu-items"> Business </div>
         </li>
         <li onClick={() => handleNavigation("/orders")}>
           <FaBox />
           <div className="menu-items"> Orders </div>
         </li>
+        <li onClick={() => handleNavigation("/table")}>
+          <FaQrcode />
+          <div className="menu-items"> Tables </div>
+        </li>
+        <li>
+          <FaReceipt />
+          <div className="menu-items"> Bills </div>
+        </li>
+        <li>
+          <FaUserFriends />
+          <div className="menu-items"> Requests </div>
+        </li>
         <li onClick={() => handleNavigation("/menu")}>
           <FaUtensils />
           <div className="menu-items"> Menu </div>
-        </li>
-        <li onClick={() => handleNavigation("/table")}>
-          <FaQrcode />
-          <div className="menu-items"> Table </div>
         </li>
       </ul>
       <div className="sidebar-bottom">
