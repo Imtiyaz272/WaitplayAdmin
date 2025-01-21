@@ -32,34 +32,34 @@ const SideBar = () => {
       <nav className="flex-1 md:mt-5">
         <ul className="space-y-1">
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl" onClick={() => handleNavigation("/dashboard")}>
-            <FaHome className="mr-2" />
+            <FaHome className="mr-3" />
             <span>Business</span>
           </li>
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl" onClick={() => handleNavigation("/orders")}>
-            <FaBox className="mr-2" />
+            <FaBox className="mr-3" />
             <span>Orders</span>
           </li>
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl" onClick={() => handleNavigation("/table")}>
-            <FaQrcode className="mr-2" />
+            <FaQrcode className="mr-3" />
             <span>Tables</span>
           </li>
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl">
-            <FaReceipt className="mr-2" />
+            <FaReceipt className="mr-3" />
             <span>Bills</span>
           </li>
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl">
-            <FaUserFriends className="mr-2" />
+            <FaUserFriends className="mr-3" />
             <span>Requests</span>
           </li>
           <li className="flex items-center px-10 py-2 cursor-pointer hover:bg-blue-500 text-xl" onClick={() => handleNavigation("/menu")}>
-            <FaUtensils className="mr-2" />
+            <FaUtensils className="mr-3" />
             <span>Menu</span>
           </li>
         </ul>
       </nav>
 
-      <div className="p-6">
-        <div className="flex items-center justify-center text-xl">
+      <div className="mb-5">
+        <div className="flex items-center px-10 py-2 text-xl">
         <FaCog className="mr-2" />
         <span>Settings</span>
         </div>
