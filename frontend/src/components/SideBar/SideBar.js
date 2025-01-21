@@ -2,6 +2,7 @@ import React from "react";
 import { FaBox, FaHome, FaUtensils, FaQrcode, FaReceipt, FaUserFriends, FaCog, FaBars, FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; 
 import "./SideBar.css";
+import logowp from "../../images/logowp.png";
 
 const SideBar = () => {
   const navigate = useNavigate(); 
@@ -16,12 +17,15 @@ const SideBar = () => {
 
   return (
     <div className="flex flex-col h-screen w-64 bg-gradient-to-b from-blue-900 to-blue-500 text-white">
-      <div className="flex justify-between items-center p-3">
-        <div>
-        <div className="text-xl font-bold ">WaitPlay</div>
-        <div className="bg-yellow-400 text-black font-semibold inline-block px-2 text-xs">Every Wait Is Worth It!</div>
+      <div className="flex justify-between items-center">
+        <div className="inline-block">
+        <img
+          src={logowp} 
+          className="w-36"
+          alt="WaitPlay Logo"
+        />
         </div>
-        <div>
+        <div className="px-3">
           <FaBars size={24} />
         </div>
       </div>
