@@ -16,7 +16,7 @@ const SideBar = () => {
   // };
 
   return (
-    <div className="flex flex-col h-screen w-64 bg-gradient-to-b from-blue-900 to-blue-500 text-white">
+    <div className="flex flex-col h-screen w-64 bg-gradient-to-b from-blue-800 to-purple-700 text-white">
       <div className="flex justify-between items-center">
         <div className="inline-block">
         <img
