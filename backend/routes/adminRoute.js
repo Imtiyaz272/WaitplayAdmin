@@ -4,6 +4,9 @@ import { Admin } from "../models/adminsModel.js";
 import { Restaurant } from "../models/restaurantModel.js";
 import { Requests } from "../models/requestsModel.js";
 import {Table} from '../models/tableModel.js';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+const JWT_SECRET = "your_jwt_secret_key";
 
 
 const router = express.Router();
@@ -17,40 +20,84 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const { name, email, phoneNumber, location, restaurant_name} = req.body;
+router.patch('/:id', async (req, res) => {
+  const adminId = req.params.id;
+  const updates = req.body;
   try {
-    const newRestaurant = new Restaurant({
-      name: restaurant_name,
-      location: location,
-      tables: [],
-      menu: [],
-      orders: [],
+    if (!adminId) {
+      return res.status(400).json({ message: "Admin ID is required." });
+    }
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      adminId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+    if (!updatedAdmin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+    res.status(200).json({
+      message: "Admin details updated successfully.",
+      admin: updatedAdmin,
     });
+  } catch (error) {
+    console.error("Error updating admin:", error);
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+});
 
-    const savedRestaurant = await newRestaurant.save();
+router.post("/", async (req, res) => {
+  const { name, email, phoneNumber, password, location, restaurant_name, role } = req.body;
 
-    const newAdmin = new Admin({
-      name,
-      email,
-      phoneNumber,
-      location,
-      restaurant_name,
-      restaurant_id: savedRestaurant._id, 
-    });
-
-    const savedAdmin = await newAdmin.save();
-
-    res.status(201).json({
-      message: "Admin and associated restaurant created successfully",
-      admin: savedAdmin,
-      restaurant: savedRestaurant,
-    });
+  try {
+    if (!password) return res.status(400).json({ message: "Password is required." });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    if (role !== "superadmin") {
+      const newRestaurant = new Restaurant({
+        name: restaurant_name,
+        location: location,
+        tables: [],
+        menu: [],
+        orders: [],
+      });
+      const savedRestaurant = await newRestaurant.save();
+      const newAdmin = new Admin({
+        name,
+        email,
+        phoneNumber,
+        password: hashedPassword,
+        location,
+        restaurant_name,
+        restaurant_id: savedRestaurant._id,
+        registeredDate: Date.now(),
+        role,
+      });
+      const savedAdmin = await newAdmin.save();
+      res.status(201).json({
+        message: "Admin and associated restaurant created successfully",
+        admin: savedAdmin,
+        restaurant: savedRestaurant,
+      });
+    } else {
+      const newAdmin = new Admin({
+        name,
+        email,
+        phoneNumber,
+        password: hashedPassword,
+        registeredDate: Date.now(),
+        role,
+      });
+      const savedAdmin = await newAdmin.save();
+      res.status(201).json({
+        message: "Superadmin created successfully",
+        admin: savedAdmin,
+      });
+    }
   } catch (error) {
     console.error("Error creating admin and restaurant:", error);
     res.status(500).json({ message: "Error creating admin and restaurant", error });
   }
-});
+})
+
 router.delete("/requests/:id", async (req, res) => {
     try {
         const request = await Requests.findById(req.params.id);
@@ -169,5 +216,35 @@ router.get("/restaurants/:id", async (req, res) => {
   }
 });
 
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) return res.status(400).json({ message: "Email and password are required." });
+
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(404).json({ message: "Admin not found." });
+
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    if (!isPasswordValid) return res.status(401).json({ message: "Invalid password." });
+
+    const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role, restaurantName:admin.restaurant_name }, JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({
+      message: "Login successful.",
+      token,
+      role: admin.role,
+      admin: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        restname:admin.restaurant_name
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 export default router;

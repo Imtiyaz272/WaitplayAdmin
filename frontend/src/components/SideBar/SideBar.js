@@ -14,6 +14,8 @@ const SideBar=({restaurantname}) => {
   };
   const handleSignOut = () => {
     console.log("Sign-out button clicked");
+    localStorage.removeItem('token');
+    navigate("/login");
   };
 
   return (

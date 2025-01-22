@@ -141,14 +141,10 @@ const TableManager = () => {
         </ul>
       </div>
 
-<<<<<<< HEAD:frontend/src/restaurantpages/TableQRGeneration/TableManager.js
       <div
         className="flex flex-col w-1/4 bg-gray-100 md:mt-0 mt-8 h-auto p-4 rounded-lg shadow-md gap-3"
         style={{ height: "calc(100vh - 100px)" }}
       >
-=======
-      <div className="flex flex-col w-full md:w-1/4 bg-gray-100 md:h-96 md:mt-0 mt-10 h-auto p-4 rounded-lg shadow-md gap-3">
->>>>>>> 87bcacf8d7accb9d950ef97e886d56a72ace1b9e:frontend/src/pages/TableQRGeneration/TableManager.js
         <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">
           Request QR Code
         </h2>

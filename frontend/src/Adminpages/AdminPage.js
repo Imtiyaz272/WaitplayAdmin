@@ -4,6 +4,9 @@ import "./AdminPage.css";
 
 const AdminPage = () => {
   const [admins, setAdmins] = useState([]);
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:5000/superadmin")
@@ -14,7 +17,7 @@ const AdminPage = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this admin?")) {
-      fetch(`/api/admins/${id}`, { method: "DELETE" })
+      fetch(`http://localhost:5000/superadmin/${id}`, { method: "DELETE" })
         .then((response) => {
           if (response.ok) {
             setAdmins(admins.filter((admin) => admin._id !== id));
@@ -27,8 +30,43 @@ const AdminPage = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    alert(`Redirect to edit admin with ID: ${id}`);
+  const handleEdit = (admin) => {
+    setSelectedAdmin(admin);
+    setEditForm({ ...admin }); // Initialize the form with the current admin data
+    setShowModal(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdate = () => {
+    if (window.confirm("Are you sure you want to update this admin?")) {
+      fetch(`http://localhost:5000/superadmin/${selectedAdmin._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editForm),
+      })
+        .then((response) => {
+          if (response.ok) {
+            setAdmins((prev) =>
+              prev.map((admin) =>
+                admin._id === selectedAdmin._id
+                  ? { ...admin, ...editForm }
+                  : admin
+              )
+            );
+            alert("Admin updated successfully.");
+            setShowModal(false);
+          } else {
+            alert("Failed to update admin.");
+          }
+        })
+        .catch((error) => console.error("Error updating admin:", error));
+    }
   };
 
   return (
@@ -54,7 +92,7 @@ const AdminPage = () => {
               <td className="admindetailsaction">
                 <button
                   className="edit-button"
-                  onClick={() => handleEdit(admin._id)}
+                  onClick={() => handleEdit(admin)}
                 >
                   <FaEdit /> Edit
                 </button>
@@ -69,6 +107,83 @@ const AdminPage = () => {
           ))}
         </tbody>
       </table>
+
+      {showModal && (
+        <div className="adminpagemodal">
+          <div className="adminpagemodal-content">
+            <h2>Edit Admin</h2>
+            <div className="adminpageform-group">
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={editForm.name}
+                onChange={handleInputChange}
+              />
+              <button
+                className="adminpagechange-button"
+                onClick={() => alert("Change name if needed.")}
+              >
+                Change
+              </button>
+            </div>
+            <div className="adminpageform-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={editForm.email}
+                onChange={handleInputChange}
+              />
+              <button
+                className="adminpagechange-button"
+                onClick={() => alert("Change email if needed.")}
+              >
+                Change
+              </button>
+            </div>
+            <div className="adminpageform-group">
+              <label>Phone Number:</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={editForm.phoneNumber}
+                onChange={handleInputChange}
+              />
+              <button
+                className="adminpagechange-button"
+                onClick={() => alert("Change phone number if needed.")}
+              >
+                Change
+              </button>
+            </div>
+            <div className="adminpageform-group">
+              <label>Rest Name:</label>
+              <input
+                type="text"
+                name="restaurant_name"
+                value={editForm.restaurant_name}
+                onChange={handleInputChange}
+              />
+              <button
+                className="adminpagechange-button"
+                onClick={() => alert("Change restaurant name if needed.")}
+              >
+                Change
+              </button>
+            </div>
+            <button className="update-button" onClick={handleUpdate}>
+              Update Details
+            </button>
+            <button
+              className="close-button"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
