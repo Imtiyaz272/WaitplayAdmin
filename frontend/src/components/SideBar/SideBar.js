@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./SideBar.css";
 import logowp from "../../images/logowp.png";
 
-const SideBar = () => {
+const SideBar = ({restaurantname}) => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false); 
 
@@ -34,7 +34,7 @@ const SideBar = () => {
         <div className="flex items-center space-x-2 justify-center mt-6">
           <FaRegUserCircle size={36} />
           {!isCollapsed && (
-          <span className="text-lg">Restaurant Name</span>
+          <span className="text-lg">{restaurantname}</span>
         )}
         </div>
 
