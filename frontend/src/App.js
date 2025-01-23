@@ -10,7 +10,7 @@ import TableManager from "./restaurantpages/TableQRGeneration/TableManager";
 import RestaurantsPage from "./components/AdminSideBar/RestaurantsPage";
 import RequestsPage from "./Adminpages/RequestsPage";
 import AdminPage from "./Adminpages/AdminPage";
-import Loginpage from "./Loginpage.js";
+import Loginpage from "./loginpage.js";
 import {ToastContainer } from "react-toastify";
 import "./App.css";
 

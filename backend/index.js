@@ -4,6 +4,7 @@ import cors from 'cors';
 import tableRoute from './routes/tableRoute.js';
 import adminRoute from './routes/adminRoute.js';
 import orderRoute from './routes/orderRoute.js';
+import menuRoute from './routes/menuRoute.js';
 import {PORT, mongoURL} from './config.js';
 
 const app = express();
@@ -24,6 +25,8 @@ app.get('/', (req, res)=>{
 app.use('/api', tableRoute);
 app.use('/orders', orderRoute);
 app.use('/superadmin',adminRoute);
+app.use('/menu', menuRoute);
+app.use("/uploads", express.static("uploads"));
 
 app.listen(PORT, ()=>{
     console.log(`App is listening to port : ${PORT}`);

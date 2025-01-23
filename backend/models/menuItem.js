@@ -41,6 +41,10 @@ const menuItemSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  prepTime:{
+    type: Number,
+    required: false,
+  }
 });
 
 export const MenuItem = mongoose.model("MenuItem", menuItemSchema);
