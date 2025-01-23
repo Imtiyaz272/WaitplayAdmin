@@ -28,8 +28,10 @@ function Loginpage() {
         setSuccessMessage(`Login successful. Welcome ${data.admin.name}!`);
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
+        localStorage.setItem("restaurant_id",data.restaurant_id);
         toast.success("Login Successful");
-        navigate("/");
+        if(data.role!="superadmin") navigate(`/${data.restaurant_id}`) 
+        else navigate('/admin')
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Login failed. Try again.");

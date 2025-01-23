@@ -229,7 +229,7 @@ router.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, admin.password);
     if (!isPasswordValid) return res.status(401).json({ message: "Invalid password." });
 
-    const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role, restaurantName:admin.restaurant_name }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, JWT_SECRET, { expiresIn: "1h" });
 
     res.status(200).json({
       message: "Login successful.",
@@ -241,6 +241,7 @@ router.post("/login", async (req, res) => {
         email: admin.email,
         restname:admin.restaurant_name
       },
+      restaurant_id:admin.restaurant_id || NULL
     });
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
