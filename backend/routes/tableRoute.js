@@ -47,7 +47,7 @@ router.get("/tables/:tableId/qrcode", async (req, res) => {
 router.post("/requestQR", async (req, res) => {
     try {
       const { tableId, description, restaurantId} = req.body;
-      const newRequest = new Request({
+      const newRequest = new Requests({
         tableId,
         description,
         restaurantId,
