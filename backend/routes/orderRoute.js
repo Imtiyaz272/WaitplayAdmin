@@ -8,7 +8,6 @@ const router = express.Router();
 router.get("/tables-with-orders", async (req, res) => {
     try {
       const tableObjectIds = await Order.distinct("table");
-  
       const tableIds = await Table.find({ _id: { $in: tableObjectIds } }).select("tableId -_id");
       res.status(200).json(tableIds.map((table) => table.tableId));
       

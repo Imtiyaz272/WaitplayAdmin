@@ -4,6 +4,7 @@ import path from "path";
 import { MenuItem } from "../models/menuItem.js";
 import fs from 'fs';
 const router = express.Router();
+import XLSX from 'xlsx';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -111,4 +112,32 @@ router.put("/updateMenuItem/:id", upload.single("image"), async (req, res) => {
     }
   });
   
+  const fileUpload = multer({ dest: "fileUpload/" });
+  
+  router.post("/uploadExcel", fileUpload.single("file"), async (req, res) => {
+    try {
+      console.log('Request for excel came');
+      const workbook = XLSX.readFile(req.file.path);
+      const sheetName = workbook.SheetNames[0];
+      const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+      const newItems = sheetData.map((row) => ({
+        title: row.Title,
+        description: row.Description,
+        image: row.Image || null, 
+        isVeg: row.IsVeg === "true",
+        halfPrice: row.HalfPrice,
+        fullPrice: row.FullPrice,
+        category: row.Category,
+        prepTime: row.PrepTime,
+      }));
+      console.log(newItems);
+      const savedItems = await MenuItem.insertMany(newItems);
+  
+      res.json(savedItems);
+    } catch (error) {
+      console.error("Error processing Excel file:", error);
+      res.status(500).json({ error: "Failed to process Excel file" });
+    }
+  });
+    
 export default router;
