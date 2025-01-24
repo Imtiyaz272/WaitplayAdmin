@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { FaBox, FaHome, FaUtensils, FaQrcode, FaReceipt, FaUserFriends, FaCog, FaBars, FaRegUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom"; 
 import "./SideBar.css";
 import logowp from "../../images/logowp.png";
 
 const SideBar = ({restaurantname}) => {
+  const id = localStorage.getItem('restaurant_id');
+  console.log('res id:',id);
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false); 
-
   const handleNavigation = (path) => {
     navigate(path); 
   };
@@ -42,21 +44,21 @@ const SideBar = ({restaurantname}) => {
         <ul className="space-y-1">
           <li
             className={`flex items-center ${!isCollapsed ? "px-10" : "px-6"} py-2 cursor-pointer hover:bg-blue-500 text-xl`}
-            onClick={() => handleNavigation("/dashboard")}
+            onClick={() => handleNavigation(`/${id}/dashboard`)}
           >
             <FaHome className="mr-3" />
             {!isCollapsed && <span>Business</span>}
           </li>
           <li
             className={`flex items-center ${!isCollapsed ? "px-10" : "px-6"} py-2 cursor-pointer hover:bg-blue-500 text-xl`}
-            onClick={() => handleNavigation("/orders")}
+            onClick={() => handleNavigation(`/${id}/orders`)}
           >
             <FaBox className="mr-3" />
             {!isCollapsed && <span>Orders</span>}
           </li>
           <li
             className={`flex items-center ${!isCollapsed ? "px-10" : "px-6"} py-2 cursor-pointer hover:bg-blue-500 text-xl`}
-            onClick={() => handleNavigation("/table")}
+            onClick={() => handleNavigation(`/${id}/table`)}
           >
             <FaQrcode className="mr-3" />
             {!isCollapsed && <span>Tables</span>}
@@ -71,7 +73,7 @@ const SideBar = ({restaurantname}) => {
           </li>
           <li
             className={`flex items-center ${!isCollapsed ? "px-10" : "px-6"} py-2 cursor-pointer hover:bg-blue-500 text-xl`}
-            onClick={() => handleNavigation("/menu")}
+            onClick={() => handleNavigation("/:id/menu")}
           >
             <FaUtensils className="mr-3" />
             {!isCollapsed && <span>Menu</span>}

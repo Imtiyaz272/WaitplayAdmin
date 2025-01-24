@@ -5,7 +5,7 @@ import { OrderItem } from './models/orderItem';
 
 const router = express.Router();
 
-router.get('/dashboard-metrics', async (req, res) => {
+router.get('/dashboard-metrics/:restaurantId', async (req, res) => {
   try {
     const orders = await Order.find().populate('items');
     

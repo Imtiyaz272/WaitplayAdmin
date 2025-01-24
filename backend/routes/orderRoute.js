@@ -5,17 +5,26 @@ import {MenuItem} from '../models/menuItem.js';
 import {OrderItem} from '../models/orderItem.js';
 const router = express.Router();
 
-router.get("/tables-with-orders", async (req, res) => {
-    try {
-      const tableObjectIds = await Order.distinct("table");
-      const tableIds = await Table.find({ _id: { $in: tableObjectIds } }).select("tableId -_id");
-      res.status(200).json(tableIds.map((table) => table.tableId));
-      
-    } catch (error) {
+router.get("/tables-with-orders/:restaurantId", async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+      const tableIdsWithOrders = await Order.distinct("table");
+
+      const tables = await Table.find({
+          restaurantId: restaurantId,
+          _id: { $in: tableIdsWithOrders }, 
+      }).select("tableId -_id");
+
+      const tableIds = tables.map((table) => table.tableId);
+
+      res.status(200).json(tableIds);
+  } catch (error) {
       console.error("Error fetching tables with orders:", error);
       res.status(500).json({ error: "Failed to fetch tables with orders." });
-    }
-  });
+  }
+});
+
 
 router.get('/fetchOrder/:tableId', async (req, res) => {
     const { tableId } = req.params;

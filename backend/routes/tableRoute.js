@@ -1,13 +1,19 @@
 import express from 'express';
 import {Table} from '../models/tableModel.js';
 import { Request } from '../models/requestModel.js';
+import {Restaurant} from '../models/restaurantModel.js';
 
 const router = express.Router();
 
-router.get("/tables", async (req, res) => {
-    const tables = await Table.find();
+router.get("/tables/:restaurantId", async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const tables = await Table.find({ restaurantId });
     res.json(tables);
-  });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
   
 router.post("/tables", async (req, res) => {
     const table = new Table(req.body);
@@ -18,22 +24,31 @@ router.post("/tables", async (req, res) => {
   router.delete("/tables/:tableId", async (req, res) => {
     const { tableId } = req.params;
     try {
-        const deletedTable = await Table.findOneAndDelete({ tableId });
+        const deletedTable = await Table.findByIdAndDelete(tableId);
         if (!deletedTable) {
             return res.status(404).json({ message: "Table not found." });
         }
-        res.json({ message: "Table deleted successfully.", table: deletedTable });
+        await Restaurant.updateOne(
+            { _id: deletedTable.restaurantId }, 
+            { $pull: { tables: tableId } } 
+        );
+        console.log('deleted successfully');
+        res.json({ 
+            message: "Table deleted successfully from both collections.", 
+            table: deletedTable 
+        });
     } catch (error) {
         console.error("Error deleting table:", error);
         res.status(500).json({ message: "Server error." });
     }
 });
 
+
 router.get("/tables/:tableId/qrcode", async (req, res) => {
   const { tableId } = req.params;
 
   try {
-      const table = await Table.findOne({ tableId });
+      const table = await Table.findById(tableId);
       if (!table) {
           return res.status(404).json({ message: "Table not found." });
       }

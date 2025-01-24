@@ -21,10 +21,6 @@
     "muller": "^1.1.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.9",
-<<<<<<< HEAD
     "xlsx": "^0.18.5"
-=======
-    "qrcode": "^1.5.4"
->>>>>>> b13d955bf85315a5ed8dabb572cadcde0accdf3e
   }
 }

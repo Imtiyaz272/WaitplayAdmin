@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
 import QRCodeModal from "./QRCodeModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { FaQrcode, FaTrash } from "react-icons/fa";
 import Notification from "./Notification";
+import {useParams} from 'react-router-dom';
 
 const TableManager = () => {
   const [snackbar, setSnackbar] = useState({
@@ -23,13 +24,12 @@ const TableManager = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTableId, setSelectedTableId] = useState(null);
 
-  const restaurantId = "123";
+  const { id: restaurantId } = useParams();
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/tables")
+      .get(`http://localhost:5000/api/tables/${restaurantId}`)
       .then((res) => {
-        console.log("API Response:", res.data);
         if (Array.isArray(res.data)) {
           setTables(res.data);
         } else {
@@ -87,7 +87,7 @@ const TableManager = () => {
     axios
       .delete(`http://localhost:5000/api/tables/${selectedTableId}`)
       .then((res) => {
-        setTables(tables.filter((table) => table.tableId !== selectedTableId));
+        setTables(tables.filter((table) => table._id !== selectedTableId));
         setShowDeleteModal(false);
         setSelectedTableId(null);
       })
@@ -128,12 +128,12 @@ const TableManager = () => {
                 <FaQrcode
                   size={14}
                   color="black"
-                  onClick={() => handleShowQRCode(table.tableId)}
+                  onClick={() => handleShowQRCode(table._id)}
                 />
                 <FaTrash
                   size={14}
                   color="lightcoral"
-                  onClick={() => handleDeleteTable(table.tableId)}
+                  onClick={() => handleDeleteTable(table._id)}
                 />
               </div>
             </li>
