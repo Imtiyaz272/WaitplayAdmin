@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate,useParams } from "react-router-dom";
 import axios from "axios";
@@ -10,37 +11,11 @@ import TableManager from "./restaurantpages/TableQRGeneration/TableManager";
 import RestaurantsPage from "./components/AdminSideBar/RestaurantsPage";
 import RequestsPage from "./Adminpages/RequestsPage";
 import AdminPage from "./Adminpages/AdminPage";
-import Loginpage from "./loginpage.js";
+import Loginpage from "./Loginpage.js";
+import UsersPage from "./Adminpages/UsersPage.js";
+import HomePage from "./restaurantpages/HomePage.js";
 import {ToastContainer } from "react-toastify";
 import "./App.css";
-
-const RestaurantContext = createContext();
-
-function useRestaurant() {
-  return useContext(RestaurantContext);
-}
-function RestaurantDetails() {
-  const { id } = useParams(); 
-  const { setRestaurant } = useRestaurant();
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/superadmin/restaurants/${id}`)
-      .then((response) => {
-        console.log(response.data);
-        setRestaurant(response.data.data); 
-      })
-      .catch((error) => {
-        console.error("Error fetching restaurant details:", error.message);
-      });
-  }, [id, setRestaurant]);
-
-  return (
-    <div>
-      <h1>Restaurant Details</h1>
-    </div>
-  );
-}
 
 function isTokenExpired(token) {
   const payload = JSON.parse(atob(token.split('.')[1]));
@@ -51,8 +26,8 @@ function isTokenExpired(token) {
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { restaurant } = useRestaurant();
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const { id } = useParams();
+  const [restaurant, setRestaurant] = useState(null);
   const [role, setRole] = useState(null);
   const token = localStorage.getItem('token');
 
@@ -70,7 +45,18 @@ function AppContent() {
 
     const payload = JSON.parse(atob(token.split('.')[1]));
     setRole(payload.role);
-  }, [token, navigate]);
+
+    if (id) {
+      axios
+        .get(`http://localhost:5000/superadmin/restaurants/${id}`)
+        .then((response) => {
+          setRestaurant(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching restaurant details:", error.message);
+        });
+    }
+  }, [token, navigate, id]);
 
   const isAdminRoute = location.pathname.startsWith("/admin");
   if (!token || isTokenExpired(token)) {
@@ -87,6 +73,7 @@ function AppContent() {
       <div className="main-content">
         <Routes>
           <Route path="/login" element={<Loginpage />} />
+          <Route path="/admin" element={role === 'superadmin' ? <HomePage /> : <Loginpage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/:id/orders" element={<Orders />} />
           <Route path="/:id/menu" element={<Menu />} />
@@ -94,7 +81,8 @@ function AppContent() {
           <Route path="/admin/restaurants" element={role === 'superadmin' ? <RestaurantsPage /> : <Loginpage />} />
           <Route path="/admin/requests" element={role === 'superadmin' ? <RequestsPage /> : <Loginpage />} />
           <Route path="/admin/admins" element={role === 'superadmin' ? <AdminPage /> : <Loginpage />} />
-          <Route path="/:id" element={<RestaurantDetails />} />
+          <Route path="/admin/users" element={role === 'superadmin' ? <UsersPage /> : <Loginpage />} />
+          <Route path="/:id" element={<HomePage />} />
           <Route path="/:id/sales" element={<Dashboard />} />
         </Routes>
       </div>
@@ -102,16 +90,15 @@ function AppContent() {
   );
 }
 
-function App() {
-  const [restaurant, setRestaurant] = useState(null);
 
+function App() {
   return (
-    <RestaurantContext.Provider value={{ restaurant, setRestaurant }}>
-      <ToastContainer />
+     <div>
       <Router>
-        <AppContent />
+        <AppContent/>
       </Router>
-    </RestaurantContext.Provider>
+      <ToastContainer  position="top-center"/>
+    </div>
   );
 }
 

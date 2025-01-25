@@ -3,9 +3,11 @@ import { FaPlusCircle, FaEdit, FaTrashAlt } from "react-icons/fa";
 import MenuModal from "./MenuModal";
 import axios from "axios";
 import DeleteConfirmModal from "./TableQRGeneration/DeleteConfirmModal";
+import { useParams } from "react-router-dom";
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const{id}=useParams
   const [showModal, setShowModal] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false); 
   const [itemToDelete, setItemToDelete] = useState(null); 

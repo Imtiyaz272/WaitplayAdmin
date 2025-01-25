@@ -7,14 +7,10 @@ import waitplayLogo from "./images/waitplay_logo.jpg";
 function Loginpage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
 
     try {
       const response = await fetch("http://localhost:5000/superadmin/login", {
@@ -25,12 +21,12 @@ function Loginpage() {
 
       if (response.ok) {
         const data = await response.json();
-        setSuccessMessage(`Login successful. Welcome ${data.admin.name}!`);
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
         localStorage.setItem("restaurant_id",data.restaurant_id);
+        localStorage.setItem("restaurantname",data.admin.restname);
         toast.success("Login Successful");
-        if(data.role!="superadmin") navigate(`/${data.restaurant_id}`) 
+        if(data.role!=="superadmin") navigate(`/${data.restaurant_id}`) 
         else navigate('/admin')
       } else {
         const errorData = await response.json();
