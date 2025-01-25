@@ -240,7 +240,7 @@ router.post("/login", async (req, res) => {
         email: admin.email,
         restname:admin.restaurant_name
       },
-      restaurant_id:admin.restaurant_id || NULL
+      restaurant_id:admin.restaurant_id
     });
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
