@@ -10,7 +10,7 @@ import TableManager from "./restaurantpages/TableQRGeneration/TableManager";
 import RestaurantsPage from "./components/AdminSideBar/RestaurantsPage";
 import RequestsPage from "./Adminpages/RequestsPage";
 import AdminPage from "./Adminpages/AdminPage";
-import Loginpage from "./loginpage.js";
+import Loginpage from "./Loginpage.js";
 import {ToastContainer } from "react-toastify";
 import "./App.css";
 
@@ -55,6 +55,7 @@ function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [role, setRole] = useState(null);
   const token = localStorage.getItem('token');
+  const {id} = useParams();
 
   useEffect(() => {
     if (!token) {
@@ -82,12 +83,12 @@ function AppContent() {
       {role === 'superadmin' || isAdminRoute ? (
         <AdminSideBar />
       ) : (
-        <SideBar restaurantname={restaurant?.name || "PFC IIT KGP"} />
+        <SideBar restaurantname={restaurant?.name || "PFC IIT KGP"}/>
       )}
       <div className="main-content">
         <Routes>
           <Route path="/login" element={<Loginpage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/:id/dashboard" element={<Dashboard />} />
           <Route path="/:id/orders" element={<Orders />} />
           <Route path="/:id/menu" element={<Menu />} />
           <Route path="/:id/table" element={<TableManager />} />

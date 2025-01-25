@@ -128,9 +128,31 @@ const Menu = () => {
     }
   };
 
+  const handleUploadFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    console.log('frontend request');
+    try {
+      const response = await axios.post("http://localhost:5000/menu/uploadExcel", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      setMenuItems([...menuItems, ...response.data]);
+      alert("Menu items successfully added from the Excel file!");
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("Failed to upload Excel file. Please try again.");
+    }
+  };
+  
   return (
     <div>
-      <div className="flex justify-center items-center mb-6 space-x-6">
+     <div className="flex justify-center items-center mb-6 space-x-6 mt-6">
         <button
           className="rounded-3xl bg-black text-white p-4 flex items-center"
           onClick={handleAddItem}
@@ -138,14 +160,19 @@ const Menu = () => {
           <FaPlusCircle />
           <span className="ml-2 font-bold">Add item</span>
         </button>
-        <button
-          className="rounded-3xl bg-black text-white p-4 flex items-center"
-          // onClick={handleAddItem}
-        >
+        <label htmlFor="upload-file" className="rounded-3xl bg-black text-white p-4 flex items-center cursor-pointer">
           <FaPlusCircle />
-          <span className="ml-2 font-bold">Export data</span>
-        </button>
+          <span className="ml-2 font-bold">Upload Excel</span>
+        </label>
+        <input
+          type="file"
+          id="upload-file"
+          className="hidden"
+          accept=".xlsx, .xls"
+          onChange={handleUploadFile}
+        />
       </div>
+
       <div className="grid grid-cols-3 gap-6">
         {menuItems.map((item) => (
           <div
