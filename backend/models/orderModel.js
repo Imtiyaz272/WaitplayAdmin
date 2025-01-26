@@ -6,9 +6,8 @@ const orderSchema = new mongoose.Schema({
     ref: "OrderItem",
   }],
   table: {
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: "Table",
-    type:String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Table",
   },
   totalPrice: { type: Number, required: true },
 });

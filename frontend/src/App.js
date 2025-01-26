@@ -26,10 +26,10 @@ function isTokenExpired(token) {
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [role, setRole] = useState(null);
   const token = localStorage.getItem('token');
+  const {id} = useParams();
 
   useEffect(() => {
     if (!token) {
@@ -68,7 +68,7 @@ function AppContent() {
       {role === 'superadmin' || isAdminRoute ? (
         <AdminSideBar />
       ) : (
-        <SideBar restaurantname={restaurant?.name || "PFC IIT KGP"} />
+        <SideBar restaurantname={restaurant?.name || "PFC IIT KGP"}/>
       )}
       <div className="main-content">
         <Routes>

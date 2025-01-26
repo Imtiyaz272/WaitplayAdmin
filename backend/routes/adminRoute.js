@@ -105,13 +105,10 @@ router.delete("/requests/:id", async (req, res) => {
         return res.status(404).json({ message: "Request not found" });
       }
       const {tableNo, tableDescription, restaurantId}=request;
-      const qrCodeData = {
-        website: `https://example.com/${restaurantId}/${tableNo}`,
-        restaurantId,
-        tableNo,
-      };
       console.log(request);
-      const qrCode = await QRCode.toDataURL(JSON.stringify(qrCodeData));
+      const qrCode = `https://example.com?restaurantId=${encodeURIComponent(
+      restaurantId
+    )}&tableId=${encodeURIComponent(tableNo)}`;
       const newTable = new Table({
         tableId: tableNo,
         description: tableDescription,
@@ -222,7 +219,6 @@ router.post("/login", async (req, res) => {
 
   try {
     if (!email || !password) return res.status(400).json({ message: "Email and password are required." });
-
     const admin = await Admin.findOne({ email });
     if (!admin) return res.status(404).json({ message: "Admin not found." });
 

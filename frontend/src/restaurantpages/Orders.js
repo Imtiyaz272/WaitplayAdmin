@@ -1,21 +1,22 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,  } from "react";
 import axios from "axios";
 import { FaRegStickyNote } from "react-icons/fa";
 import { FaRegClipboard } from 'react-icons/fa';
 import { FaCreditCard } from 'react-icons/fa';
+import {useParams} from 'react-router-dom';
 
 const Orders = () => {
+  const { id: restaurantId } = useParams();
   const [tableIds, setTableIds] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
   const [billDetails, setBillDetails] = useState(null);
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/orders/tables-with-orders") 
+      .get(`http://localhost:5000/orders/tables-with-orders/${restaurantId}`) 
       .then((res) => {
-        console.log("API Response:", res.data);
         if (Array.isArray(res.data)) {
           setTableIds(res.data);
         } else {
