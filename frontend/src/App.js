@@ -74,7 +74,7 @@ function AppContent() {
         <Routes>
           <Route path="/login" element={<Loginpage />} />
           <Route path="/admin" element={role === 'superadmin' ? <HomePage /> : <Loginpage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/:id/dashboard" element={<Dashboard />} />
           <Route path="/:id/orders" element={<Orders />} />
           <Route path="/:id/menu" element={<Menu />} />
           <Route path="/:id/table" element={<TableManager />} />

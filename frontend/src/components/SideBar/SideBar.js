@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaBox, FaHome, FaUtensils, FaQrcode, FaReceipt, FaUserFriends, FaCog, FaBars, FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom"; 
 import "./SideBar.css";
-import logowp from "../../images/waitplay_logo.jpg";
+import logowp from "../../images/logowp.png";
 
 const SideBar = ({restaurantname}) => {
   const id = localStorage.getItem('restaurant_id');

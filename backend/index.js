@@ -8,8 +8,8 @@ import adminRoute from './routes/adminRoute.js';
 import orderRoute from './routes/orderRoute.js';
 import menuRoute from './routes/menuRoute.js';
 import userRoute from './routes/userRoute.js';
-import {Table} from '../models/tableModel.js';
-import { Order } from '../models/orderModel.js';
+import { Table } from './models/tableModel.js';
+import { Order } from './models/orderModel.js';
 import { PORT, mongoURL } from './config.js';
 
 const app = express();
