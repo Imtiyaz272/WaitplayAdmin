@@ -4,7 +4,7 @@ import path from "path";
 import { MenuItem } from "../models/menuItem.js";
 import fs from 'fs';
 const router = express.Router();
-import XLSX from 'xlsx';
+import xlsx from 'xlsx';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -114,30 +114,116 @@ router.put("/updateMenuItem/:id", upload.single("image"), async (req, res) => {
   
   const fileUpload = multer({ dest: "fileUpload/" });
   
-  router.post("/uploadExcel", fileUpload.single("file"), async (req, res) => {
-    try {
-      console.log('Request for excel came');
-      const workbook = XLSX.readFile(req.file.path);
-      const sheetName = workbook.SheetNames[0];
-      const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-      const newItems = sheetData.map((row) => ({
-        title: row.Title,
-        description: row.Description,
-        image: row.Image || null, 
-        isVeg: row.IsVeg === "true",
-        halfPrice: row.HalfPrice,
-        fullPrice: row.FullPrice,
-        category: row.Category,
-        prepTime: row.PrepTime,
-      }));
-      console.log(newItems);
-      const savedItems = await MenuItem.insertMany(newItems);
-  
-      res.json(savedItems);
-    } catch (error) {
-      console.error("Error processing Excel file:", error);
-      res.status(500).json({ error: "Failed to process Excel file" });
+  router.post('/uploadExcel', fileUpload.single('file'), (req, res) => {
+    console.log(' a request came');
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
     }
+  
+    const filePath = req.file.path;
+  
+    const workbook = xlsx.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+  
+    const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+  
+    const requiredFields = [
+      'title',
+      'description',
+      'detailedDescription',
+      'isVeg',
+      'halfPrice',
+      'fullPrice',
+      'specialItems',
+      'category',
+      'type',
+      'prepTime',
+    ];
+  
+    const missingFields = checkRequiredFields(data, requiredFields);
+  
+    if (missingFields.length > 0) {
+      return res.status(404).send(`${missingFields.join(', ')}`);
+    }
+  
+    // data.forEach((item) => {
+    //   const newMenuItem = new MenuItem(item);
+    //   newMenuItem
+    //     .save()
+    //     .then(() => console.log('Menu item saved'))
+    //     .catch((err) => console.log('Error saving menu item:', err));
+    // });
+  
+    res.send('File uploaded and data processed successfully!');
   });
+
+  function checkRequiredFields(data, requiredFields) {
+    const missingFields = [];
+  
+    const normalizedFieldMap = requiredFields.reduce((acc, field) => {
+      acc[field.toLowerCase()] = field; 
+      return acc;
+    }, {});
+  
+    const normalizedRequiredFields = Object.keys(normalizedFieldMap);
+  
+    data.forEach((row, index) => {
+      const rowKeys = Object.keys(row).map((key) => key.toLowerCase());
+  
+      normalizedRequiredFields.forEach((field) => {
+        if (!rowKeys.includes(field)) {
+          
+          missingFields.push(normalizedFieldMap[field]);
+        }
+      });
+    });
+  
+    return missingFields;
+  }
+  
+  
+  // function checkRequiredFields(data, requiredFields) {
+  //   const missingFields = [];
+  
+  //   const normalizedRequiredFields = requiredFields.map((field) => field.toLowerCase());
+  
+  //   data.forEach((row, index) => {
+  //     const rowKeys = Object.keys(row).map((key) => key.toLowerCase());
+  
+  //     normalizedRequiredFields.forEach((field) => {
+  //       if (!rowKeys.includes(field)) {
+  //         missingFields.push(`${field}`);
+  //       }
+  //     });
+  //   });
+  
+  //   return missingFields;
+  // }
+  
+  // router.post("/uploadExcel", fileUpload.single("file"), async (req, res) => {
+  //   try {
+  //     console.log('Request for excel came');
+  //     const workbook = XLSX.readFile(req.file.path);
+  //     const sheetName = workbook.SheetNames[0];
+  //     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+  //     const newItems = sheetData.map((row) => ({
+  //       title: row.Title,
+  //       description: row.Description,
+  //       image: row.Image || null, 
+  //       isVeg: row.IsVeg === "true",
+  //       halfPrice: row.HalfPrice,
+  //       fullPrice: row.FullPrice,
+  //       category: row.Category,
+  //       prepTime: row.PrepTime,
+  //     }));
+  //     console.log(newItems);
+  //     const savedItems = await MenuItem.insertMany(newItems);
+  
+  //     res.json(savedItems);
+  //   } catch (error) {
+  //     console.error("Error processing Excel file:", error);
+  //     res.status(500).json({ error: "Failed to process Excel file" });
+  //   }
+  // });
     
 export default router;
