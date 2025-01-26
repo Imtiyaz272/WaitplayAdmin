@@ -146,7 +146,14 @@ const Menu = () => {
       alert("Menu items successfully added from the Excel file!");
     } catch (error) {
       console.error("Error uploading Excel file:", error);
+
+    if (error.response && error.response.status === 404) {
+      const errorMessage = error.response.data;
+
+      alert(`Please add these missing fields in your excel sheet: ${errorMessage}`);
+    } else {
       alert("Failed to upload Excel file. Please try again.");
+    }
     }
   };
   
