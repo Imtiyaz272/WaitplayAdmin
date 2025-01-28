@@ -13,7 +13,16 @@
     text-align: center;
   }
 .box1{
-    height: 150px;
+    height: 180px;
+}
+
+.box22 {
+  background: linear-gradient(to bottom, #2563eb, #9333ea);
+  border-radius: 10px;
+  padding: 0.5rem;
+  padding-right: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
 }
 
 .row2{

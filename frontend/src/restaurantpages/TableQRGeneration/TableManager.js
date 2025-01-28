@@ -1,18 +1,19 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import QRCodeModal from "./QRCodeModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import { FaQrcode, FaTrash } from "react-icons/fa";
 import Notification from "./Notification";
-import {useParams} from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const TableManager = () => {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "success", 
+    severity: "success",
   });
 
   const [tables, setTables] = useState([]);
@@ -25,6 +26,7 @@ const TableManager = () => {
   const [selectedTableId, setSelectedTableId] = useState(null);
 
   const { id: restaurantId } = useParams();
+  const restaurantName = localStorage.getItem("restaurantname");
 
   useEffect(() => {
     axios
@@ -48,10 +50,14 @@ const TableManager = () => {
       alert("Please fill in both fields.");
       return;
     }
-  
-    const newTable = { tableId: tableNumber, description, restaurantId};
+    const newTable = {
+      tableNo: tableNumber,
+      tableDescription: description,
+      restaurantId,
+      restaurantName,
+    };
     axios
-      .post("http://localhost:5000/api/requestQR", newTable)
+      .post("http://localhost:5000/superadmin/requests", newTable)
       .then((res) => {
         setSnackbar({
           open: true,
@@ -68,9 +74,9 @@ const TableManager = () => {
           message: "Failed to send request.",
           severity: "error",
         });
-      setTableNumber("");
-      setDescription("");
-    });
+        setTableNumber("");
+        setDescription("");
+      });
   };
 
   const closeSnackbar = () => {
@@ -90,6 +96,7 @@ const TableManager = () => {
         setTables(tables.filter((table) => table._id !== selectedTableId));
         setShowDeleteModal(false);
         setSelectedTableId(null);
+        toast.success("Successfully Deleted Table");
       })
       .catch((err) => {
         console.error("Error deleting table:", err);
@@ -116,12 +123,12 @@ const TableManager = () => {
             <li
               key={table.tableId}
               className={`border px-4 py-2 rounded-lg shadow-sm flex items-center justify-between w-2/3 md:w-2/3 mx-auto ${
-    table.isAvailable ? 'bg-gray-100' : 'bg-purple-300'
-  }`}
+                table.isAvailable ? "bg-gray-100" : "bg-purple-300"
+              }`}
             >
               <div>
                 <span className="font-semibold text-gray-700">
-                 Table - {table.tableId}
+                  Table - {table.tableId}
                 </span>{" "}
               </div>
               <div className="flex items-center space-x-3 cursor-pointer">
@@ -182,11 +189,11 @@ const TableManager = () => {
               </button>
             </div>
           )}
-           <div className="space-y-4 flex flex-col items-center mb-4 mt-2">
-          <button className="bg-gray-200 text-black px-4 py-2 rounded-full w-3/4 border-2 border-black text-sm font-semibold">
-            GET TABLE QR CODES
-          </button>
-        </div>
+          <div className="space-y-4 flex flex-col items-center mb-4 mt-2">
+            <button className="bg-gray-200 text-black px-4 py-2 rounded-full w-3/4 border-2 border-black text-sm font-semibold">
+              GET TABLE QR CODES
+            </button>
+          </div>
         </div>
       </div>
 
@@ -201,12 +208,12 @@ const TableManager = () => {
         />
       )}
 
-              <Notification
-                open={snackbar.open}
-                message={snackbar.message}
-                severity={snackbar.severity}
-                onClose={closeSnackbar}
-              />
+      <Notification
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={closeSnackbar}
+      />
     </div>
   );
 };
