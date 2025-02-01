@@ -1,6 +1,11 @@
-import React from "react";
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { FiTrendingUp } from "react-icons/fi";
+import { FaChevronDown } from 'react-icons/fa';
 import "./Dashboard.css";
+import axios from "axios";
 import growup from "../images/growup.png"
 import {
   LineChart,
@@ -13,14 +18,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data2 = [
-  { month: "Jan", Sales: 1000 },
-  { month: "Mar", Sales: 1200 },
-  { month: "Apr", Sales: 1100 },
-  { month: "May", Sales: 1500 },
-  { month: "June", Sales: 1250 },
-  { month: "July", Sales: 1000 },
-];
 const data1 = [
   { month: "Jan", Sales: 50 },
   { month: "Mar", Sales: 50 },
@@ -44,14 +41,32 @@ const data = [
   { month: "Nov", Veg: 75, NonVeg: 70 },
   { month: "Dec", Veg: 65, NonVeg: 90 },
 ];
-const RevenueChart = () => {
+
+const RevenueChart = ({selectedYear}) => {
+  const [revenueData, setRevenueData] = useState([]);
+  const { id: restaurantId } = useParams();
+
+  useEffect(() => {
+    const fetchRevenueData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/dashboard-metrics/sales/${restaurantId}`, { params: {year: selectedYear }});
+        setRevenueData(response.data); 
+      } catch (error) {
+        console.error("Error fetching revenue data:", error);
+      }
+    };
+
+    fetchRevenueData();
+  }, [restaurantId, selectedYear]);
+
   const currentMonth = new Date().toLocaleString("default", { month: "short" });
+
   return (
     <div className="mt-5">
       <ResponsiveContainer width="100%" height={80}>
-        <LineChart data={data2}>
+        <LineChart data={revenueData}>
           <XAxis dataKey="month" stroke="#ffffff" />
-          <YAxis stroke="#ffffff" width={30} />
+          <YAxis stroke="#ffffff" width={30} fontSize={12}/>
           <Tooltip
             contentStyle={{
               backgroundColor: "rgba(107, 16, 164, 0.8)",
@@ -81,10 +96,11 @@ const RevenueChart = () => {
     </div>
   );
 };
+
 const SalesAverageOrder = () => {
   const currentMonth = new Date().toLocaleString("default", { month: "short" });
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       <ResponsiveContainer width="100%" height={80}>
         <LineChart data={data1}>
           <XAxis dataKey="month" stroke="#ffffff" />
@@ -157,18 +173,48 @@ const SalesChart = () => {
   );
 };
 
+
+
 function Dashboard() {
+  const [dashboardData, setDashboardData] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    avgOrderValue: 0,
+    revenueSplit: { dineIn: 0, delivery: 0, takeOut: 0 },
+    topSellingItems: [],
+  });
+  const [selectedYear, setSelectedYear] = useState("2024");
+  const { id: restaurantId } = useParams();
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/dashboard-metrics/${restaurantId}`);
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    };
+
+    fetchDashboardData();
+  }, [restaurantId]); 
+
+
   return (
     <div className="min-h-screen bg-blue-950 text-white p-6 flex flex-col">
       <div className="row1 p-3">
         <div>
           <div className="box box1">
           <div className="flex flex-row items-center justify-center">
-              <div className="flex flex-col mr-4 ml-2">
-              <span className="text-3xl font-bold mt-0.5 text-lime-300">₹200</span>
+            <div className="flex flex-col mr-4 ml-2">
+              <span className="text-3xl font-bold mt-0.5 text-lime-300"> ₹{dashboardData.totalOrders}</span>
                 <p className="text-2xl">Last hour</p>
-              </div>
-              <img src={growup} className="w-14 h-14 fill-white" />
+            </div>
+              <FiTrendingUp color="white" fontSize={30} />
               </div>
           </div>
           <h2 className="text-lg font-semibold mt-2">No of Orders</h2>
@@ -178,20 +224,24 @@ function Dashboard() {
             <div className="flex flex-row">
               <div className="flex flex-col mr-4 ml-2">
                 <p className="text-3xl font-bold mt-0.5 text-lime-300">
-                  ₹21973
+                ₹{dashboardData.totalRevenue}
                 </p>
                 <p>Charges Inc</p>
               </div>
               <div className="w-full pl-20 pt-5">
-                <select className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs">
-                  <option>3 Months</option>
-                  <option>6 Months</option>
-                  <option>12 Months</option>
-                </select>
+                <select
+                className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+              </select>
               </div>
             </div>
 
-            <RevenueChart />
+            <RevenueChart selectedYear={selectedYear}/>
           </div>
           <h2 className="text-lg font-semibold mt-2">Revenue</h2>
         </div>
@@ -200,11 +250,11 @@ function Dashboard() {
           <div className="box22 box1">
             <div className="flex flex-row items-center justify-center">
               <div className="flex flex-col mr-4">
-                <p className="text-3xl font-bold mt-0.5 text-lime-300">₹200</p>
+                <p className="text-3xl font-bold mt-0.5 text-lime-300">₹{dashboardData.avgOrderValue}</p>
                 <p>Sales Generated/No of Orders</p>
               </div>
 
-              <select className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs">
+              <select className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs -mt-8">
                 <option>3 Months</option>
                 <option>6 Months</option>
                 <option>12 Months</option>
@@ -220,16 +270,22 @@ function Dashboard() {
         <div>
           <div className="box revbox grid grid-cols-3 gap-4">
             <div className="revin">
-              <p className="text-2xl font-bold text-lime-300">20000</p>
-              <p className="text-lg">Dine in</p>
+              <p className="text-2xl font-bold text-lime-300">{dashboardData.revenueSplit.dineIn}</p>
+              <p className="text-lg inline-flex items-center">
+                Dine in <FaChevronDown className="ml-2" />
+              </p>
             </div>
             <div className="revin">
-              <p className="text-2xl font-bold text-lime-300">20000</p>
-              <p className="text-lg">Delivery</p>
+              <p className="text-2xl font-bold text-lime-300">{dashboardData.revenueSplit.delivery}</p>
+              <p className="text-lg inline-flex items-center">
+                Delivery <FaChevronDown className="ml-2" />
+              </p>
             </div>
             <div className="revin">
-              <p className="text-2xl font-bold text-lime-300">20000</p>
-              <p className="text-lg">Take out</p>
+              <p className="text-2xl font-bold text-lime-300">{dashboardData.revenueSplit.takeOut}</p>
+              <p className="text-lg inline-flex items-center">
+                Take out <FaChevronDown className="ml-2" />
+              </p>
             </div>
           </div>
           <h2 className="text-lg font-semibold mt-2">Revenue Splits</h2>
@@ -253,19 +309,13 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  "Chicken Biryani",
-                  "Chicken Kanti",
-                  "Jaljeera Drink",
-                  "Chicken Lollypop",
-                  "Veg Korma",
-                ].map((item, index) => (
+                {dashboardData.topSellingItems.map((item, index) => (
                   <tr key={index} className="rounded-lg">
-                    <td className="">{item}</td>
-                    <td className="text-center">3</td>
+                    <td className="">{item.name}</td>
+                    <td className="text-center">{item.quantity}</td>
                     <td className="text-center">
                       <span className="bg-green-400 pl-1 pr-1 rounded-xl">
-                        1560
+                        ₹{item.rev} 
                       </span>
                     </td>
                   </tr>

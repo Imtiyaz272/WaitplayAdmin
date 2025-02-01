@@ -11,6 +11,7 @@ import userRoute from './routes/userRoute.js';
 import { Table } from './models/tableModel.js';
 import { Order } from './models/orderModel.js';
 import { PORT, mongoURL } from './config.js';
+import dashboardRoute from './routes/dashboardRoute.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -75,6 +76,7 @@ app.use('/superadmin', adminRoute);
 app.use('/menu', menuRoute);
 app.use("/uploads", express.static("uploads"));
 app.use("/users", userRoute);
+app.use("/dashboard-metrics", dashboardRoute);
 
 server.listen(PORT, () => {
   console.log(`App is listening to port: ${PORT}`);
