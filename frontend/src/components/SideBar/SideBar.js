@@ -1,18 +1,32 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
-import { FaBox, FaHome, FaUtensils, FaQrcode, FaReceipt, FaUserFriends, FaCog, FaBars, FaRegUserCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaBox, FaHome, FaUtensils, FaQrcode, FaReceipt, FaUserFriends, FaCog, FaBars, FaRegUserCircle,FaBell} from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom"; 
 import "./SideBar.css";
+import axios from "axios";
 import logowp from "../../images/logowp.png";
 
 const SideBar = ({restaurantname}) => {
   const id = localStorage.getItem('restaurant_id');
+  const [unreadCount, setUnreadCount] = useState(1);
   console.log('res id:',id);
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false); 
   const handleNavigation = (path) => {
     navigate(path);
   };
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/notifications/${id}/unread-count`);
+      setUnreadCount(response.data.unreadCount);
+    } catch (error) {
+      console.error("Error fetching unread notifications:", error);
+    }
+  };
+  useEffect(() => {
+    fetchUnreadCount();
+  }, [id]);
+
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -75,9 +89,16 @@ const SideBar = ({restaurantname}) => {
             className={`flex items-center ${
               !isCollapsed ? "px-10" : "px-6"
             } py-2 cursor-pointer hover:bg-blue-500 text-xl`}
+            onClick={()=> handleNavigation(`/${id}/notifications`)}
           >
-            <FaUserFriends className="mr-3" />
-            {!isCollapsed && <span>Requests</span>}
+            <FaBell/>
+            {unreadCount > 0 && (
+              <span className=" mb-5 p-0 bg-red-600 text-white text-xs rounded-full px-1">
+                {unreadCount}
+              </span>)}
+            {!isCollapsed && <span className="ml-1">Notifications</span>}
+          
+
           </li>
           <li
             className={`flex items-center ${!isCollapsed ? "px-10" : "px-6"} py-2 cursor-pointer hover:bg-blue-500 text-xl`}

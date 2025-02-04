@@ -17,6 +17,7 @@
 
 //   return (
 //     <div className="sidebar">
+
 //       <div className="logo-container">
 //         <img
 //           src={waitplayLogo} 

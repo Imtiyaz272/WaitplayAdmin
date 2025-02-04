@@ -20,7 +20,7 @@ function HomePage() {
         return <div> NOT ACCESIBLE HELP</div>
     }
     return (
-        <div className="home-container">
+        <div className="h-screen overflow-scroll bg-slate-500">
         <div className="home-header">
           <div>
             <h1>{restaurant.name}</h1>
@@ -28,7 +28,7 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="home-section">
+        <div className="home-section bg-slate-500">
           <h2 className="home-section-title">Features</h2>
           <div className="home-cards">
             <div className="home-card">

@@ -14,6 +14,8 @@ import AdminPage from "./Adminpages/AdminPage";
 import Loginpage from "./Loginpage.js";
 import UsersPage from "./Adminpages/UsersPage.js";
 import HomePage from "./restaurantpages/HomePage.js";
+import WSPage from "./restaurantpages/Orderssocket.js"
+import NotificationPage from "./restaurantpages/NotificationPage.js";
 import {ToastContainer } from "react-toastify";
 import "./App.css";
 
@@ -83,6 +85,8 @@ function AppContent() {
           <Route path="/admin/admins" element={role === 'superadmin' ? <AdminPage /> : <Loginpage />} />
           <Route path="/admin/users" element={role === 'superadmin' ? <UsersPage /> : <Loginpage />} />
           <Route path="/:id" element={<HomePage />} />
+          <Route path="/:id/notifications" element={<NotificationPage />} />
+          <Route path="/os" element={<WSPage />} />
           <Route path="/:id/sales" element={<Dashboard />} />
         </Routes>
       </div>

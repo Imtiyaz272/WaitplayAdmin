@@ -159,7 +159,7 @@ const SalesChart = () => {
 
 function Dashboard() {
   return (
-    <div className="min-h-screen bg-blue-950 text-white p-6 flex flex-col">
+    <div className="h-screen bg-blue-950 text-white p-6 flex flex-col overflow-scroll">
       <div className="row1 p-3">
         <div>
           <div className="box box1">
@@ -175,14 +175,14 @@ function Dashboard() {
         </div>
         <div>
           <div className="box22 box1">
-            <div className="flex flex-row">
+            <div className="flex flex-row justify-between">
               <div className="flex flex-col mr-4 ml-2">
                 <p className="text-3xl font-bold mt-0.5 text-lime-300">
                   ₹21973
                 </p>
                 <p>Charges Inc</p>
               </div>
-              <div className="w-full pl-20 pt-5">
+              <div className="w-full">
                 <select className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs">
                   <option>3 Months</option>
                   <option>6 Months</option>
