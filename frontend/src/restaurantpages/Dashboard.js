@@ -2,11 +2,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FiTrendingUp } from "react-icons/fi";
-import { FaChevronDown } from 'react-icons/fa';
+import { FiTrendingUp, FiMaximize , FiExternalLink, FiFilter} from "react-icons/fi";
+import {MdFilterList} from 'react-icons/md';
+import { FaChevronDown, FaSlidersH } from 'react-icons/fa';
 import "./Dashboard.css";
 import axios from "axios";
 import growup from "../images/growup.png"
+
 import {
   LineChart,
   Line,
@@ -100,7 +102,7 @@ const RevenueChart = ({selectedYear}) => {
 const SalesAverageOrder = () => {
   const currentMonth = new Date().toLocaleString("default", { month: "short" });
   return (
-    <div className="mt-3">
+    <div className="mt-3 ">
       <ResponsiveContainer width="100%" height={80}>
         <LineChart data={data1}>
           <XAxis dataKey="month" stroke="#ffffff" />
@@ -173,8 +175,6 @@ const SalesChart = () => {
   );
 };
 
-
-
 function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
     totalOrders: 0,
@@ -185,6 +185,7 @@ function Dashboard() {
   });
   const [selectedYear, setSelectedYear] = useState("2024");
   const { id: restaurantId } = useParams();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleYearChange = (e) => {
     setSelectedYear(e.target.value);
@@ -206,21 +207,27 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-blue-950 text-white p-6 flex flex-col">
+      <div className="flex justify-end ">
+      </div>
       <div className="row1 p-3">
         <div>
-          <div className="box box1">
+          <div className="box box1 relative">
           <div className="flex flex-row items-center justify-center">
             <div className="flex flex-col mr-4 ml-2">
               <span className="text-3xl font-bold mt-0.5 text-lime-300"> ₹{dashboardData.totalOrders}</span>
                 <p className="text-2xl">Last hour</p>
             </div>
               <FiTrendingUp color="white" fontSize={30} />
-              </div>
+          </div>
+             <FaSlidersH className="text-lime-300 absolute top-2 right-3 " />
           </div>
           <h2 className="text-lg font-semibold mt-2">No of Orders</h2>
         </div>
         <div>
-          <div className="box22 box1">
+          <div className={`box22 box1 relative ${
+          isExpanded ? "scale-125 shadow-xl z-10" : ""
+        }`}>
+          <FiExternalLink className="absolute top-2 right-2 text-lg cursor-pointer transition-transform duration-200 hover:scale-125" onClick={() => setIsExpanded(!isExpanded)}/>
             <div className="flex flex-row">
               <div className="flex flex-col mr-4 ml-2">
                 <p className="text-3xl font-bold mt-0.5 text-lime-300">
@@ -366,3 +373,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
