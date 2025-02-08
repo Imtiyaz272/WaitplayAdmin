@@ -11,11 +11,11 @@ import userRoute from './routes/userRoute.js';
 import { Table } from './models/tableModel.js';
 import { Order } from './models/orderModel.js';
 import { PORT, mongoURL } from './config.js';
+import notificationRoute from './routes/notificationRoute.js'
 import dashboardRoute from './routes/dashboardRoute.js';
 
 const app = express();
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -35,36 +35,86 @@ mongoose.connect(mongoURL).then(() => {
 
 io.on('connection', (socket) => {
   console.log('New client connected');
-  socket.on('getTablesWithOrders', async (restaurantId) => {
-    const tables = await Table.find({ restaurantId });
-    const orders = await Order.find({ restaurantId }).populate('items').populate('table');
-    const tablesWithOrders = tables.filter(table => 
-      orders.some(order => order.table._id.toString() === table._id.toString())
-    );
-    
-    socket.emit('tablesWithOrders', tablesWithOrders);
+
+  socket.on('joinRestaurant', (restaurantId) => {
+    console.log(`Restaurant ${restaurantId} joined`);
+    socket.join(restaurantId); 
   });
 
-  socket.on('orderUpdated', (orderData) => {
-    Order.findByIdAndUpdate(orderData._id, orderData, { new: true }, (err, updatedOrder) => {
-      if (err) {
-        console.error('Error updating order', err);
-        return;
-      }
-      io.emit('orderStatusUpdate', updatedOrder);
-    });
-  });
+  socket.on("getTablesWithOrders", async (restaurantId) => {
+    try {
+      console.log("Received restaurantId:", restaurantId);
+      const tables = await Table.find({ restaurantId }).exec();
+      const orders = await Order.find({}).populate('table').exec();
+      
+      const tablesWithOrders = tables.filter(table =>
+        orders.some(order => order.table._id.toString() === table._id.toString())
+      );
 
+      console.log("Tables with orders:", tablesWithOrders);
+      socket.emit('tablesWithOrders', tablesWithOrders);
+    } catch (error) {
+      console.error("Error fetching tables and orders:", error);
+      socket.emit('error', "Failed to fetch tables and orders.");
+    }
+  });
   socket.on('placeOrder', async (orderData) => {
-    const order = new Order(orderData);
-    await order.save();
-    io.emit('newOrder', order);
+    try {
+      const order = new Order(orderData);
+      await order.save();
+      console.log("HI");
+
+      const orderDataPopulated = await Order.findById(order._id)
+        .populate('items')
+        .populate('table');
+
+      console.log("New Order:", orderDataPopulated);
+      io.to(orderDataPopulated.table.restaurantId).emit('newOrder', orderDataPopulated);
+    } catch (error) {
+      console.error('Error saving order:', error);
+      socket.emit('error', 'Failed to save order');
+    }
+  });
+
+  socket.on('orderUpdated', async (orderData) => {
+    try {
+      const updatedOrder = await Order.findByIdAndUpdate(orderData._id, orderData, { new: true });
+      if (!updatedOrder) {
+        return socket.emit('error', 'Order not found');
+      }
+      console.log("Order updated:", updatedOrder);
+      io.to(updatedOrder.restaurantId).emit('orderStatusUpdate', updatedOrder);
+    } catch (error) {
+      console.error('Error updating order:', error);
+      socket.emit('error', 'Failed to update order');
+    }
+  });
+
+  socket.on("findAllOrders", async (restaurantId) => {
+    try {
+      const orders = await Order.find({})
+  .populate({
+    path: "table",
+    match: { restaurantId: restaurantId },
+  })
+  .populate("items");
+      console.log("ordersabhi:",orders);
+      socket.emit('fetchAllOrders', orders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      socket.emit('error', 'Failed to fetch orders');
+    }
+  });
+
+  socket.on("hello", (msg, restaurantId) => {
+    io.to(restaurantId).emit("hello", msg);
   });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
 });
+
 
 app.get('/', (req, res) => {
   return res.status(200).send("Backend");
@@ -76,6 +126,7 @@ app.use('/superadmin', adminRoute);
 app.use('/menu', menuRoute);
 app.use("/uploads", express.static("uploads"));
 app.use("/users", userRoute);
+app.use("/notifications",notificationRoute);
 app.use("/dashboard-metrics", dashboardRoute);
 
 server.listen(PORT, () => {

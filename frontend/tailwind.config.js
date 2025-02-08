@@ -4,7 +4,11 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        'screen-20px': 'calc(100vh - 20px)',
+      },
+    },
   },
   plugins: [],
 };
