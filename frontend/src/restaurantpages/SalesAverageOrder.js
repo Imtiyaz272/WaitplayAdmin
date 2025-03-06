@@ -26,7 +26,7 @@ const data1 = [
 const SalesAverageOrder = () => {
     const currentMonth = new Date().toLocaleString("default", { month: "short" });
     return (
-      <div className="mt-3 ">
+      <div className="mt-3">
         <ResponsiveContainer width="100%" height={80}>
           <LineChart data={data1}>
             <XAxis dataKey="month" stroke="#ffffff" />

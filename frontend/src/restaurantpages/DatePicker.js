@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 
-const DateSelect = ({ setStartDate, setEndDate ,isit}) => {
+const DateSelect = ({ setStartDate, setEndDate ,isit, setCompLabel}) => {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
@@ -58,7 +58,7 @@ const DateSelect = ({ setStartDate, setEndDate ,isit}) => {
 
   return (
     
-    <div className="relative p-4 w-full flex justify-end">
+    <div className="w-auto">
       {(selectedOption === "Custom" || selectedOption === "--Select--") && (isit===1) &&  (
         <div className="w-full flex justify-center">
           <span className="ml-2 text-2xl font-semibold">
@@ -69,7 +69,10 @@ const DateSelect = ({ setStartDate, setEndDate ,isit}) => {
       <select
         className="bg-green-400 rounded-xl p-1 pl-2 text-black text-xs"
         value={selectedOption}
-        onChange={(e) => setSelectedOption(e.target.value)}
+        onChange={(e) => {
+          setSelectedOption(e.target.value);
+          setCompLabel(e.target.value); 
+        }}
       >
         <option value="--Select--">--Select--</option>
         <option value="Today">Today</option>
@@ -81,7 +84,7 @@ const DateSelect = ({ setStartDate, setEndDate ,isit}) => {
         <option value="Custom">Custom</option>
       </select>
       {showPopup && (
-        <div className="fixed right-0 top-12 p-6 bg-blue-950 shadow-lg rounded-xl w-80">
+        <div className="fixed right-10 top-24 p-6 bg-blue-950 shadow-lg rounded-xl w-80">
           <form onSubmit={handleSubmit}>
             <label className="block mb-1 font-medium text-white text-xs">Start Date:</label>
             <DatePicker
